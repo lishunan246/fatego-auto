@@ -5,7 +5,7 @@ import time
 
 screen = Screen()
 while True:
-
+    start_time = time.time()
     # 点击黑森林
     screen.click_on('heisenlin')
 
@@ -25,9 +25,11 @@ while True:
             time.sleep(0.5)
 
     # 点击 羁绊
-    screen.click_on('jiban',delay=2)
+    screen.click_on('jiban', repeat=True)
 
     # 点击exp
-    screen.click_on('exp',delay=1)
+    screen.click_on('exp', repeat=True)
 
-    screen.click_on('xiayibu',delay=2)
+    screen.click_on('xiayibu')
+
+    print "---战斗完成 历时 %s 秒 ---" % (time.time() - start_time)

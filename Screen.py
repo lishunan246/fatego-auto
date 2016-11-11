@@ -8,7 +8,7 @@ from ImageLoader import ImageLoader
 
 
 class Screen:
-    _delay = 0
+    _delay = 0.3
     _imageLoader = ImageLoader()
 
     def __init__(self):
@@ -17,7 +17,7 @@ class Screen:
 
     def fight(self):
         self.click_on('atk_btn')
-        time.sleep(1)
+        time.sleep(self._delay)
         cards = []
         self.capture()
         if self.chances_of('3_3') > max(self.chances_of('2_3'), self.chances_of('1_3')):
@@ -35,7 +35,7 @@ class Screen:
             x_old, y_old = pyautogui.position()
             pyautogui.click(x, y, 1)
             pyautogui.moveTo(x_old, y_old)
-            time.sleep(1)
+            time.sleep(self._delay)
 
     def find_list(self, name):
         cards = []
@@ -61,8 +61,8 @@ class Screen:
         t = ImageGrab.grab().convert("RGB")
         self.screen = cv2.cvtColor(numpy.array(t), cv2.COLOR_RGB2BGR)
 
-    def click_on(self, name, delay=_delay):
-        time.sleep(delay)
+    def click_on(self, name, repeat=False):
+
         p = self._imageLoader.get(name)
         max_val = 0
         x, y = 0, 0
@@ -71,7 +71,7 @@ class Screen:
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             x, y = max_loc
-            time.sleep(0.3)
+            time.sleep(self._delay)
 
         m, n, q = p.shape
 
@@ -80,8 +80,17 @@ class Screen:
 
         x_old, y_old = pyautogui.position()
         pyautogui.click(x, y, 1)
+
+        max_val = 1 if repeat else 0
+        while max_val > 0.8:
+            self.capture()
+            res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+
+            time.sleep(self._delay)
+            pyautogui.click(x, y, 1)
+
         pyautogui.moveTo(x_old, y_old)
-        time.sleep(delay)
 
     def have(self, name):
         return self.chances_of(name) > 0.8
