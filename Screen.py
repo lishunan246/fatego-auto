@@ -5,6 +5,7 @@ import pyautogui
 import time
 from ImageLoader import ImageLoader
 import win32api
+import win32gui
 
 
 class Screen:
@@ -31,7 +32,7 @@ class Screen:
                 while self.have(key, loader=self._skills):
                     self.click_on(key, loader=self._skills)
                     time.sleep(2)
-                    print 'use '+key
+                    print 'use ' + key
 
         self.click_on('atk_btn')
 
@@ -46,9 +47,7 @@ class Screen:
 
         for i in range(0, 3):
             x, y = cards[i]
-            x_old, y_old = pyautogui.position()
-            pyautogui.click(x, y, 1)
-            pyautogui.moveTo(x_old, y_old)
+            self._click(x, y)
             time.sleep(self._delay)
 
     def find_list(self, name):
@@ -75,6 +74,14 @@ class Screen:
         t = ImageGrab.grab().convert("RGB")
         self.screen = cv2.cvtColor(numpy.array(t), cv2.COLOR_RGB2BGR)
 
+    @staticmethod
+    def _click(x, y):
+        handle = win32gui.GetForegroundWindow()
+        x_old, y_old = win32api.GetCursorPos()
+        pyautogui.click(x, y, 1)
+        win32api.SetCursorPos((x_old, y_old))
+        win32gui.SetForegroundWindow(handle)
+
     def click_on(self, name, repeat=False, loader=_imageLoader):
 
         p = loader.get(name)
@@ -92,8 +99,7 @@ class Screen:
         x += n / 2
         y += m / 2
 
-        x_old, y_old = pyautogui.position()
-        pyautogui.click(x, y, 1)
+        self._click(x, y)
 
         max_val = 1 if repeat else 0
         while max_val > 0.8:
@@ -102,9 +108,7 @@ class Screen:
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             if max_val > 0.8:
-                pyautogui.click(x, y, 1)
-
-        pyautogui.moveTo(x_old, y_old)
+                self._click(x, y)
 
     def have(self, name, loader=_imageLoader):
         return self.chances_of(name, loader) > 0.8
