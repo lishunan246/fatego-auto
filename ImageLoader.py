@@ -7,15 +7,20 @@ import os
 
 
 class ImageLoader:
-    _images = {}
-    _image_path = 'image//'
 
-    def __init__(self):
+    _postfix = '.png'
+
+    def __init__(self, path):
+        self.images = {}
+        self._image_path = path
         for pic in os.listdir(self._image_path):
             if pic.endswith(".png"):
                 img = cv2.imread(self._image_path + pic)
-                self._images[pic] = img
+                self.images[pic] = img
         pass
 
     def get(self, name):
-        return self._images[name + '.png']
+        return self.images[name + self._postfix]
+
+    def get_all(self):
+        return map(lambda x: x[:-len(self._postfix)], self.images.keys())

@@ -3,11 +3,17 @@
 from Screen import Screen
 import time
 
+cnt = 0
 screen = Screen()
 while True:
     start_time = time.time()
     # 点击黑森林
-    screen.click_on('heisenlin')
+    target = 'target'
+    screen.click_on(target, repeat=True)
+    if screen.have('huangjinguoshi'):
+        screen.click_on('huangjinguoshi')
+        screen.click_on('jueding')
+        screen.click_on(target)
 
     # 助战选择 第一个？
     screen.click_on('zhuzhan')
@@ -27,9 +33,17 @@ while True:
     # 点击 羁绊
     screen.click_on('jiban', repeat=True)
 
+    if screen.have('lvup'):
+        screen.click_on('lvup', repeat=True)
+        print 'lv1'
+
     # 点击exp
     screen.click_on('exp', repeat=True)
 
-    screen.click_on('xiayibu')
+    if screen.have('lvup'):
+        screen.click_on('lvup', repeat=True)
+        print 'lv2'
 
-    print "---战斗完成 历时 %s 秒 ---" % (time.time() - start_time)
+    screen.click_on('xiayibu')
+    cnt += 1
+    print "---战斗 %s 完成 历时 %s 秒 ---" % (cnt, time.time() - start_time)
