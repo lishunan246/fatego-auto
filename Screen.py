@@ -83,7 +83,6 @@ class Screen:
         win32gui.SetForegroundWindow(handle)
 
     def click_on(self, name, repeat=False, loader=_imageLoader):
-
         p = loader.get(name)
         max_val = 0
         x, y = 0, 0

@@ -17,7 +17,6 @@ class ImageLoader:
             if pic.endswith(".png"):
                 img = cv2.imread(self._image_path + pic)
                 self.images[pic] = img
-        pass
 
     def get(self, name):
         return self.images[name + self._postfix]
