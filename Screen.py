@@ -12,10 +12,29 @@ class Screen:
     _delay = 0.3
     _imageLoader = ImageLoader('image/')
     _skills = ImageLoader('image/skills/')
+    target = ImageLoader('./')
 
     def __init__(self):
         t = ImageGrab.grab().convert("RGB")
         self.screen = cv2.cvtColor(numpy.array(t), cv2.COLOR_RGB2BGR)
+
+        if self.have('topleft'):
+            tl = self._imageLoader.get('topleft')
+            res = cv2.matchTemplate(self.screen, tl, cv2.TM_CCOEFF_NORMED)
+
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            x1, y1 = max_loc
+            rd = self._imageLoader.get('rightdown')
+            res = cv2.matchTemplate(self.screen, rd, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            x2, y2 = max_loc
+            # default 989
+            y = y2 - y1
+            self._imageLoader.y = y
+            self._skills.y = y
+            self._imageLoader.use_haimawan = True
+            self._skills.use_haimawan = True
+
 
     def fight(self):
         is_final_stage = False
@@ -35,15 +54,14 @@ class Screen:
                     print 'use ' + key
 
         self.click_on('atk_btn')
+        time.sleep(1)
 
         cards = []
-        while len(cards) != 5:
-            cards = []
-            time.sleep(self._delay)
-            self.capture()
-            cards += self.find_list('buster')
-            cards += self.find_list('art')
-            cards += self.find_list('quick')
+
+        self.capture()
+        cards += self.find_list('buster')
+        cards += self.find_list('art')
+        cards += self.find_list('quick')
 
         for i in range(0, 3):
             x, y = cards[i]
@@ -83,13 +101,15 @@ class Screen:
         win32gui.SetForegroundWindow(handle)
 
     def click_on(self, name, repeat=False, loader=_imageLoader):
+        print 'try click ' + name
         p = loader.get(name)
         max_val = 0
         x, y = 0, 0
-        while max_val < 0.8:
+        while max_val < 0.65:
             self.capture()
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            print name + ' ' + str(max_val)
             x, y = max_loc
             time.sleep(self._delay)
 
@@ -117,4 +137,5 @@ class Screen:
         p = loader.get(name)
         res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+        print 'chances of ' + name + ': ' + str(max_val)
         return max_val

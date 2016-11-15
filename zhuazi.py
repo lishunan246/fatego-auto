@@ -9,11 +9,11 @@ while True:
     start_time = time.time()
     # 点击黑森林
     target = 'target'
-    screen.click_on(target, repeat=True)
+    screen.click_on(target, repeat=True, loader=screen.target)
     if screen.have('huangjinguoshi'):
         screen.click_on('huangjinguoshi')
         screen.click_on('jueding')
-        screen.click_on(target)
+        screen.click_on(target, loader=screen.target)
 
     # 助战选择 第一个？
     screen.click_on('zhuzhan')
@@ -35,6 +35,10 @@ while True:
 
     if screen.have('lvup'):
         screen.click_on('lvup', repeat=True)
+        print 'lv1'
+
+    if screen.have('jibanup'):
+        screen.click_on('jibanup', repeat=True)
         print 'lv1'
 
     # 点击exp
