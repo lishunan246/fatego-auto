@@ -1,6 +1,6 @@
 # fatego-auto
 
-命运官位指定（Fate/Grand Order）自动刷图脚本，并不保证能赢。
+命运冠位指定（Fate/Grand Order）自动刷图脚本，并不保证能赢。
 
 建议使用海马玩模拟器。
 
