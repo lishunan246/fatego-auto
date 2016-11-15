@@ -6,8 +6,8 @@
 
 ## 使用说明
 
-1. 准备工作：对模拟器中副本标题进行截图，例如 ![target](D:\Projects\autoplay\image\doc\target.png)，替换根目录下的`target.png`。
-
+1. 准备工作：对模拟器中副本标题进行截图，例如 ![](https://github.com/lishunan246/fatego-auto/blob/master/image/doc/target.png)，替换根目录下的`target.png`。
+   
    如果副本和窗口大小不变则无需重复此步骤。
 
 2. 以管理员权限运行脚本或程序。
