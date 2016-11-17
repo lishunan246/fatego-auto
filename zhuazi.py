@@ -35,19 +35,16 @@ while True:
 
     if screen.have('lvup'):
         screen.click_on('lvup', repeat=True)
-        print 'lv1'
 
     if screen.have('jibanup'):
         screen.click_on('jibanup', repeat=True)
-        print 'lv1'
 
     # 点击exp
     screen.click_on('exp', repeat=True)
 
     if screen.have('lvup'):
         screen.click_on('lvup', repeat=True)
-        print 'lv2'
 
     screen.click_on('xiayibu')
     cnt += 1
-    print "---战斗 %s 完成 历时 %s 秒 ---" % (cnt, time.time() - start_time)
+    print("---战斗 %s 完成 历时 %s 秒 ---" % (cnt, time.time() - start_time))

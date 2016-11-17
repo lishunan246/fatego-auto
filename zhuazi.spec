@@ -2,11 +2,17 @@
 
 block_cipher = None
 
+added_files = [
+         ( 'image', 'image' ),
+         ( 'LICENSE.md', '.' ),
+         ( 'README.md', '.' ),
+         ( 'target.png', '.')
+         ]
 
 a = Analysis(['zhuazi.py'],
              pathex=['D:\\Projects\\autoplay'],
              binaries=None,
-             datas=[],
+             datas=added_files,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
