@@ -35,7 +35,6 @@ class Screen:
             self._imageLoader.use_haimawan = True
             self._skills.use_haimawan = True
 
-
     def fight(self):
         is_final_stage = False
         if self.chances_of('3_3') > max(self.chances_of('2_3'), self.chances_of('1_3')):
@@ -53,15 +52,19 @@ class Screen:
                     time.sleep(2)
                     print('use ' + key)
 
-        self.click_on('atk_btn')
-        time.sleep(1)
-
         cards = []
 
-        self.capture()
-        cards += self.find_list('buster')
-        cards += self.find_list('art')
-        cards += self.find_list('quick')
+        while len(cards) < 3:
+            cards = []
+
+            if self.have('atk_btn'):
+                self.click_on('atk_btn')
+                time.sleep(1)
+
+            self.capture()
+            cards += self.find_list('buster')
+            cards += self.find_list('art')
+            cards += self.find_list('quick')
 
         for i in range(0, 3):
             x, y = cards[i]
@@ -105,7 +108,7 @@ class Screen:
         p = loader.get(name)
         max_val = 0
         x, y = 0, 0
-        while max_val < 0.65:
+        while max_val < 0.8:
             self.capture()
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
