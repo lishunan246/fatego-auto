@@ -1,12 +1,13 @@
 # -*- mode: python -*-
-
+# coding=utf-8
 block_cipher = None
 
 added_files = [
          ( 'image', 'image' ),
          ( 'LICENSE.md', '.' ),
          ( 'README.md', '.' ),
-         ( 'target.png', '.')
+         ( 'target.png', '.'),
+         ('icon.ico','.')
          ]
 
 a = Analysis(['zhuazi.py'],
@@ -29,6 +30,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
+          icon='icon.ico',
           console=True )
 coll = COLLECT(exe,
                a.binaries,
@@ -36,4 +38,5 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='zhuazi')
+
+               name='ZhuaZi')

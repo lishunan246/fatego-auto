@@ -99,7 +99,12 @@ class Screen:
     def _click(x, y):
         handle = win32gui.GetForegroundWindow()
         x_old, y_old = win32api.GetCursorPos()
-        pyautogui.click(x, y, 1)
+        # see https://github.com/asweigart/pyautogui/issues/23
+        try:
+            pyautogui.click(x, y, 1)
+        except FileNotFoundError:
+            pass
+
         win32api.SetCursorPos((x_old, y_old))
         win32gui.SetForegroundWindow(handle)
 
