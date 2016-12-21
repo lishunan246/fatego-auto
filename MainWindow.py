@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QTextBrowser
 from PyQt5.QtGui import QIcon
 from zhuazi import Zhuazi
@@ -31,9 +33,15 @@ class MainWindow(QMainWindow):
         self.toolBar.addAction(exit_action)
 
         txt = QTextBrowser()
-
+        txt.setContentsMargins(5, 5, 5, 5)
         self.setCentralWidget(txt)
         self.show()
+
+    def add_text(self, text):
+        self.centralWidget().append(text)
+        sb = self.centralWidget().verticalScrollBar()
+        sb.setValue(sb.maximum())
+        print(text)
 
     def closeEvent(self, *args, **kwargs):
         self.stop_loop()

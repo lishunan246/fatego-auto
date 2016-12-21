@@ -13,7 +13,7 @@ class Zhuazi(threading.Thread):
         self._stop = threading.Event()
         self.cnt = 0
         self.parent.status_changed()
-        self.screen = Screen()
+        self.screen = Screen(parent)
 
     def stop(self):
         self._stop.set()
@@ -75,4 +75,4 @@ class Zhuazi(threading.Thread):
             screen.click_on('xiayibu')
             self.cnt += 1
             self.parent.status_changed()
-            print("---战斗 %s 完成 历时 %s 秒 ---" % (self.cnt, time.time() - start_time))
+            self.parent.add_text("---战斗 %s 完成 历时 %s 秒 ---" % (self.cnt, time.time() - start_time))
