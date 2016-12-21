@@ -11,7 +11,7 @@ added_files = [
          ]
 
 a = Analysis(['zhuazi.py'],
-             pathex=['D:\\Projects\\autoplay'],
+             pathex=[],
              binaries=None,
              datas=added_files,
              hiddenimports=[],
@@ -31,7 +31,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           icon='icon.ico',
-          console=True )
+          console=False )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

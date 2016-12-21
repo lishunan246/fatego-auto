@@ -13,6 +13,7 @@ class Screen:
     _imageLoader = ImageLoader('image/')
     _skills = ImageLoader('image/skills/')
     target = ImageLoader('./')
+    _stop = False
 
     def __init__(self):
         t = ImageGrab.grab().convert("RGB")
@@ -48,6 +49,8 @@ class Screen:
         if is_final_stage:
             for key in self._skills.get_all():
                 while self.have(key, loader=self._skills):
+                    if self._stop:
+                        return
                     self.click_on(key, loader=self._skills)
                     time.sleep(2)
                     print('use ' + key)
@@ -55,6 +58,8 @@ class Screen:
         cards = []
 
         while len(cards) < 3:
+            if self._stop:
+                return
             cards = []
 
             if self.have('atk_btn'):
@@ -114,6 +119,9 @@ class Screen:
         max_val = 0
         x, y = 0, 0
         while max_val < 0.8:
+            if self._stop:
+                return
+
             self.capture()
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -130,6 +138,9 @@ class Screen:
 
         max_val = 1 if repeat else 0
         while max_val > 0.8:
+            if self._stop:
+                return
+
             time.sleep(1)
             self.capture()
             res = cv2.matchTemplate(self.screen, p, cv2.TM_CCOEFF_NORMED)
@@ -147,3 +158,7 @@ class Screen:
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         print('chances of ' + name + ': ' + str(max_val))
         return max_val
+
+    def stop(self):
+        self._stop = True
+        print("stop screen")
