@@ -12,8 +12,9 @@ def my_exception_hook(exctype, value, traceback):
     sys._excepthook(exctype, value, traceback)
     sys.exit(1)
 
+def main():
+    print("init")
 
-if __name__ == '__main__':
     sys._excepthook = sys.excepthook
     sys.excepthook = my_exception_hook
 
@@ -24,3 +25,8 @@ if __name__ == '__main__':
         sys.exit(app.exec_())
     except:
         print("Exiting")
+
+if __name__ == '__main__':
+    main()
+
+

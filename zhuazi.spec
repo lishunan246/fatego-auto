@@ -10,7 +10,7 @@ added_files = [
          ('icon.ico','.')
          ]
 
-a = Analysis(['zhuazi.py'],
+a = Analysis(['main.pyw'],
              pathex=[],
              binaries=None,
              datas=added_files,
