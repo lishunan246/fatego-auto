@@ -14,6 +14,7 @@ class Zhuazi(threading.Thread):
         self.cnt = 0
         self.parent.status_changed()
         self.screen = Screen(parent)
+        self.do_loop = True
 
     def stop(self):
         self._stop.set()
@@ -22,10 +23,13 @@ class Zhuazi(threading.Thread):
     def stopped(self):
         return self._stop.is_set()
 
+    def quit_on_complete(self):
+        self.do_loop = False
+
     def run(self):
         self.parent.status_changed()
         screen = self.screen
-        while True:
+        while self.do_loop:
             start_time = time.time()
             if self.fresh_start:
                 # 点击黑森林

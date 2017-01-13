@@ -24,12 +24,16 @@ class MainWindow(QMainWindow):
         continue_action = QAction(QIcon('./image/ui/continue.png'), 'Continue', self)
         continue_action.triggered.connect(self.continue_loop)
 
+        once_action = QAction(QIcon('./image/ui/one.jpg'), 'Once', self)
+        once_action.triggered.connect(self.quit_on_complete)
+
         exit_action = QAction(QIcon('./image/ui/exit.png'), 'Exit', self)
         exit_action.setShortcut('Ctrl+Q')
         exit_action.triggered.connect(self.stop_loop)
 
         self.toolBar.addAction(loop_action)
         self.toolBar.addAction(continue_action)
+        self.toolBar.addAction(once_action)
         self.toolBar.addAction(exit_action)
 
         txt = QTextBrowser()
@@ -73,3 +77,8 @@ class MainWindow(QMainWindow):
         if self.zhuazi is None:
             return
         self.zhuazi.stop()
+
+    def quit_on_complete(self):
+        if self.zhuazi is None:
+            return
+        self.zhuazi.quit_on_complete()
