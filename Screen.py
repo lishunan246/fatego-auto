@@ -16,6 +16,7 @@ class Screen:
     _skills = ImageLoader('image/skills/')
     target = ImageLoader('./')
     _stop = False
+    _current_stage = 0
     
     def log(self, text):
         self.window.add_text(text)
@@ -43,16 +44,20 @@ class Screen:
             self._skills.use_haimawan = True
 
     def fight(self):
-        is_final_stage = False
-        if self.chances_of('3_3') > max(self.chances_of('2_3'), self.chances_of('1_3')):
+        c33 = self.chances_of('3_3')
+        c23 = self.chances_of('2_3')
+        c31 = self.chances_of('1_3')
+        if c33 > max(c23, c31):
             self.log('3-3')
-            is_final_stage = True
-        elif self.chances_of('2_3') > max(self.chances_of('3_3'), self.chances_of('1_3')):
+            self._current_stage = 3
+        elif c23 > max(c33, c31):
             self.log('2-3')
+            self._current_stage = 2
         else:
             self.log('1-3')
+            self._current_stage = 1
 
-        if is_final_stage:
+        if self._current_stage == 3:
             for key in self._skills.get_all():
                 while self.have(key, loader=self._skills):
                     if self._stop:

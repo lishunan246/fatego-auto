@@ -52,11 +52,10 @@ class Zhuazi(threading.Thread):
                 if self.stopped():
                     return
 
-                if screen.have('network_error'):
-                    screen.click_on('retry')
-
                 if screen.have('atk_btn'):
                     screen.fight()
+                elif screen.have('network_error'):
+                    screen.click_on('retry')
                 else:
                     time.sleep(0.5)
 
