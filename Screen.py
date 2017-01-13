@@ -9,7 +9,6 @@ import win32api
 import win32gui
 from PIL import ImageGrab
 
-from Singleton import *
 from GameStatus import *
 from ImageLoader import ImageLoader
 
@@ -18,8 +17,7 @@ class Screen(metaclass=Singleton):
     _delay = 0.3
     _imageLoader = ImageLoader('image/')
     _skills = ImageLoader('image/skills/')
-    target = ImageLoader('./')
-    _stop = False
+    target = ImageLoader('./', need_scale=False)
 
     @staticmethod
     def log(text):
@@ -28,6 +26,8 @@ class Screen(metaclass=Singleton):
     def __init__(self):
         t = ImageGrab.grab().convert("RGB")
         self.screen = cv2.cvtColor(numpy.array(t), cv2.COLOR_RGB2BGR)
+
+        self.ultLoader = ImageLoader('image/ult/')
 
         if self.have('topleft'):
             tl = self._imageLoader.get('topleft')
@@ -40,11 +40,8 @@ class Screen(metaclass=Singleton):
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
             x2, y2 = max_loc
             # default 989
-            y = y2 - y1
-            self._imageLoader.y = y
-            self._skills.y = y
-            self._imageLoader.use_haimawan = True
-            self._skills.use_haimawan = True
+            GameStatus().y = y2 - y1
+            GameStatus().use_Droid4X = True
 
     def get_cards(self):
         self.capture()
@@ -105,12 +102,14 @@ class Screen(metaclass=Singleton):
         win32gui.SetForegroundWindow(handle)
 
     def click_on(self, name, repeat=False, loader=_imageLoader):
+        if GameStatus().game_stage == GameStage.Stopped:
+            return
         self.log('try click ' + name)
         p = loader.get(name)
         max_val = 0
         x, y = 0, 0
         while max_val < 0.8:
-            if self._stop:
+            if GameStatus().game_stage == GameStage.Stopped:
                 return
 
             self.capture()
@@ -129,7 +128,7 @@ class Screen(metaclass=Singleton):
 
         max_val = 1 if repeat else 0
         while max_val > 0.8:
-            if self._stop:
+            if GameStatus().game_stage == GameStage.Stopped:
                 return
 
             time.sleep(1)
@@ -150,6 +149,4 @@ class Screen(metaclass=Singleton):
         self.log('chances of ' + name + ': ' + str(max_val))
         return max_val
 
-    def stop(self):
-        self._stop = True
-        self.log("stop screen")
+

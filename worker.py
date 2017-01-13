@@ -7,7 +7,7 @@ from GameStatus import *
 from Screen import Screen
 
 
-class Zhuazi(threading.Thread):
+class Worker(threading.Thread):
     def __init__(self):
         super().__init__()
 
@@ -18,8 +18,8 @@ class Zhuazi(threading.Thread):
         self.do_loop = True
 
     def stop(self):
+        GameStatus().game_stage = GameStage.Stopped
         self._stop.set()
-        self.screen.stop()
 
     def stopped(self):
         return self._stop.is_set()
@@ -32,7 +32,7 @@ class Zhuazi(threading.Thread):
         if GameStatus().current_level == 3:
             for key in Screen()._skills.get_all():
                 while Screen().have(key, loader=Screen()._skills):
-                    if Screen()._stop:
+                    if GameStatus().game_stage == GameStage.Stopped:
                         return
                     Screen().click_on(key, loader=Screen()._skills)
                     time.sleep(2)
@@ -95,7 +95,7 @@ class Zhuazi(threading.Thread):
 
                         GameStatus().game_stage = GameStage.AfterFight
 
-            else:
+            elif GameStatus().game_stage == GameStage.AfterFight:
 
                 # 点击 羁绊
                 screen.click_on('jiban', repeat=True)
@@ -117,3 +117,8 @@ class Zhuazi(threading.Thread):
                 GameStatus().window.status_changed()
                 GameStatus().window.add_text("---战斗 %s 完成 历时 %s 秒 ---" % (self.cnt, time.time() - start_time))
                 GameStatus().game_stage = GameStage.BeforeFight
+
+            elif GameStatus().game_stage == GameStage.Stopped:
+                break
+            else:
+                raise RuntimeError('Unknown Status')

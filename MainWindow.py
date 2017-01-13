@@ -3,9 +3,9 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QAction, QTextBrowser
 
-from Screen import Screen
 from GameStatus import GameStatus, GameStage
-from zhuazi import Zhuazi
+from Screen import Screen
+from worker import Worker
 
 
 class MainWindow(QMainWindow):
@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
         if self.worker is not None and not self.worker.stopped():
             return
 
-        self.worker = Zhuazi()
+        self.worker = Worker()
         GameStatus().game_stage = GameStage.BeforeFight
         self.worker.start()
 
@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         if self.worker is not None and not self.worker.stopped():
             return
 
-        self.worker = Zhuazi()
+        self.worker = Worker()
         GameStatus().game_stage = GameStage.Fighting
         self.worker.start()
 

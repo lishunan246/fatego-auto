@@ -6,6 +6,7 @@ class GameStage(Enum):
     BeforeFight = auto()
     Fighting = auto()
     AfterFight = auto()
+    Stopped = auto()
 
 
 class GameStatus(metaclass=Singleton):
@@ -14,3 +15,5 @@ class GameStatus(metaclass=Singleton):
         self.current_level = None
         self.cards = []
         self.window = None
+        self.y = 989.0
+        self.use_Droid4X = False
