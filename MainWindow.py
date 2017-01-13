@@ -11,7 +11,7 @@ from zhuazi import Zhuazi
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.zhuazi = None
+        self.worker = None
         self.statusBar().showMessage('ready')
         self.resize(250, 150)
         self.move(300, 300)
@@ -49,7 +49,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(txt)
         self.show()
 
-
     def add_text(self, text):
         self.centralWidget().append(text)
         sb = self.centralWidget().verticalScrollBar()
@@ -61,38 +60,38 @@ class MainWindow(QMainWindow):
         print("关闭程序")
 
     def status_changed(self):
-        if self.zhuazi is None:
+        if self.worker is None:
             self.statusBar().showMessage("就绪。")
-        elif self.zhuazi.stopped():
+        elif self.worker.stopped():
             self.statusBar().showMessage("已停止。")
         else:
-            self.statusBar().showMessage("当前次数： " + str(self.zhuazi.cnt))
+            self.statusBar().showMessage("当前次数： " + str(self.worker.cnt))
 
     def start_loop(self):
-        if self.zhuazi is not None and not self.zhuazi.stopped():
+        if self.worker is not None and not self.worker.stopped():
             return
 
-        self.zhuazi = Zhuazi()
+        self.worker = Zhuazi()
         GameStatus().game_stage = GameStage.BeforeFight
-        self.zhuazi.start()
+        self.worker.start()
 
     def continue_loop(self):
-        if self.zhuazi is not None and not self.zhuazi.stopped():
+        if self.worker is not None and not self.worker.stopped():
             return
 
-        self.zhuazi = Zhuazi()
+        self.worker = Zhuazi()
         GameStatus().game_stage = GameStage.Fighting
-        self.zhuazi.start()
+        self.worker.start()
 
     def stop_loop(self):
-        if self.zhuazi is None:
+        if self.worker is None:
             return
-        self.zhuazi.stop()
+        self.worker.stop()
 
     def quit_on_complete(self):
-        if self.zhuazi is None:
+        if self.worker is None:
             return
-        self.zhuazi.quit_on_complete()
+        self.worker.quit_on_complete()
 
     def inspect(self):
         Screen().get_cards()
