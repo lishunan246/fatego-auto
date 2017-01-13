@@ -1,14 +1,16 @@
 # coding=utf-8
 
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QTextBrowser
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMainWindow, QAction, QTextBrowser
+
+from Screen import Screen
+from GameStatus import GameStatus, GameStage
 from zhuazi import Zhuazi
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.zhuazi = None
         self.statusBar().showMessage('ready')
         self.resize(250, 150)
@@ -17,6 +19,8 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('icon.ico'))
 
         self.toolBar = self.addToolBar('')
+
+        GameStatus().window = self
 
         loop_action = QAction(QIcon('./image/ui/loop.png'), 'Loop', self)
         loop_action.triggered.connect(self.start_loop)
@@ -31,15 +35,20 @@ class MainWindow(QMainWindow):
         exit_action.setShortcut('Ctrl+Q')
         exit_action.triggered.connect(self.stop_loop)
 
+        inspect_action = QAction(QIcon('./image/ui/inspect.jpg'), 'Inspect', self)
+        inspect_action.triggered.connect(self.inspect)
+
         self.toolBar.addAction(loop_action)
         self.toolBar.addAction(continue_action)
         self.toolBar.addAction(once_action)
         self.toolBar.addAction(exit_action)
+        self.toolBar.addAction(inspect_action)
 
         txt = QTextBrowser()
         txt.setContentsMargins(5, 5, 5, 5)
         self.setCentralWidget(txt)
         self.show()
+
 
     def add_text(self, text):
         self.centralWidget().append(text)
@@ -63,14 +72,16 @@ class MainWindow(QMainWindow):
         if self.zhuazi is not None and not self.zhuazi.stopped():
             return
 
-        self.zhuazi = Zhuazi(self, fresh_start=True)
+        self.zhuazi = Zhuazi()
+        GameStatus().game_stage = GameStage.BeforeFight
         self.zhuazi.start()
 
     def continue_loop(self):
         if self.zhuazi is not None and not self.zhuazi.stopped():
             return
 
-        self.zhuazi = Zhuazi(self, fresh_start=False)
+        self.zhuazi = Zhuazi()
+        GameStatus().game_stage = GameStage.Fighting
         self.zhuazi.start()
 
     def stop_loop(self):
@@ -82,3 +93,6 @@ class MainWindow(QMainWindow):
         if self.zhuazi is None:
             return
         self.zhuazi.quit_on_complete()
+
+    def inspect(self):
+        Screen().get_cards()

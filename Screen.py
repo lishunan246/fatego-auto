@@ -1,31 +1,34 @@
 # coding=utf-8
 
-from PIL import ImageGrab, Image
+import time
+
 import cv2
 import numpy
 import pyautogui
-import time
-from ImageLoader import ImageLoader
 import win32api
 import win32gui
+from PIL import ImageGrab
+
+from Singleton import *
+from GameStatus import *
+from ImageLoader import ImageLoader
 
 
-class Screen:
+class Screen(metaclass=Singleton):
     _delay = 0.3
     _imageLoader = ImageLoader('image/')
     _skills = ImageLoader('image/skills/')
     target = ImageLoader('./')
     _stop = False
-    _current_stage = 0
-    
-    def log(self, text):
-        self.window.add_text(text)
 
-    def __init__(self, window):
+    @staticmethod
+    def log(text):
+        GameStatus().window.add_text(text)
+
+    def __init__(self):
         t = ImageGrab.grab().convert("RGB")
         self.screen = cv2.cvtColor(numpy.array(t), cv2.COLOR_RGB2BGR)
-        self.window = window
-        
+
         if self.have('topleft'):
             tl = self._imageLoader.get('topleft')
             res = cv2.matchTemplate(self.screen, tl, cv2.TM_CCOEFF_NORMED)
@@ -43,49 +46,26 @@ class Screen:
             self._imageLoader.use_haimawan = True
             self._skills.use_haimawan = True
 
-    def fight(self):
+    def get_cards(self):
+        self.capture()
+        GameStatus().cards = []
+        GameStatus().cards += self.find_list('buster')
+        GameStatus().cards += self.find_list('art')
+        GameStatus().cards += self.find_list('quick')
+
+    def get_current_level(self):
         c33 = self.chances_of('3_3')
         c23 = self.chances_of('2_3')
         c31 = self.chances_of('1_3')
         if c33 > max(c23, c31):
             self.log('3-3')
-            self._current_stage = 3
+            return 3
         elif c23 > max(c33, c31):
             self.log('2-3')
-            self._current_stage = 2
+            return 2
         else:
             self.log('1-3')
-            self._current_stage = 1
-
-        if self._current_stage == 3:
-            for key in self._skills.get_all():
-                while self.have(key, loader=self._skills):
-                    if self._stop:
-                        return
-                    self.click_on(key, loader=self._skills)
-                    time.sleep(2)
-                    self.log('use ' + key)
-
-        cards = []
-
-        while len(cards) < 3:
-            if self._stop:
-                return
-            cards = []
-
-            if self.have('atk_btn'):
-                self.click_on('atk_btn')
-                time.sleep(1)
-
-            self.capture()
-            cards += self.find_list('buster')
-            cards += self.find_list('art')
-            cards += self.find_list('quick')
-
-        for i in range(0, 3):
-            x, y = cards[i]
-            self._click(x, y)
-            time.sleep(self._delay)
+            return 1
 
     def find_list(self, name):
         cards = []
