@@ -1,12 +1,13 @@
-from enum import Enum, auto
+from enum import Enum
+
 from Singleton import *
 
 
 class GameStage(Enum):
-    BeforeFight = auto()
-    Fighting = auto()
-    AfterFight = auto()
-    Stopped = auto()
+    BeforeFight = 1
+    Fighting = 2
+    AfterFight = 3
+    Stopped = 4
 
 
 class GameStatus(metaclass=Singleton):
