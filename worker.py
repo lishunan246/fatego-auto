@@ -41,7 +41,7 @@ class Worker(threading.Thread):
         GameStatus().cards = []
 
         while len(GameStatus().cards) < 3:
-            if self._stop:
+            if self.stopped():
                 return
 
             if Screen().have('atk_btn'):

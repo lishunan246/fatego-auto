@@ -21,7 +21,6 @@ def main():
 
     app = QApplication(sys.argv)
     win = MainWindow()
-
     # noinspection PyBroadException
     try:
         sys.exit(app.exec_())
